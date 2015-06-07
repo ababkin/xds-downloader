@@ -1,0 +1,48 @@
+name:                xds-downloader
+version:             0.1.0.0
+description:         Dataset processor for xdataset
+license:             AllRightsReserved
+author:              Alex Babkin
+maintainer:          ababkin@gmail.com
+build-type:          Simple
+cabal-version:       >=1.8
+
+executable xds-downloader
+  hs-source-dirs: src
+  main-is:        Main.hs
+  ghc-options:    
+    -static 
+    -Wall 
+    -threaded 
+    -O2
+    -rtsopts
+    "-with-rtsopts=-N"
+
+  buildable: True
+  build-depends:
+      base
+    , text
+    , attoparsec
+    , mtl
+    , stm
+    , transformers
+    , aeson
+    , bytestring
+    , containers
+    , conduit
+    , http-conduit
+    , conduit-extra
+    , resourcet
+    , async
+    , bounded-tchan
+    , io-streams
+    , http-streams
+    , amazonka
+    , amazonka-core
+    , amazonka-sqs
+    , amazonka-sns
+    , http-types
+    , lens
+    , aws
+    , monad-loops
+

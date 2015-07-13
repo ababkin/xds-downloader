@@ -1,0 +1,9 @@
+.git
+.gitignore
+dist
+log
+xds-downloader
+setenv.sh
+cabal.sandbox.config
+.cabal-sandbox
+

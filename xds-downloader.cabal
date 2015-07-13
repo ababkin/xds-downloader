@@ -39,10 +39,10 @@ executable xds-downloader
     , http-streams
     , amazonka
     , amazonka-core
-    , amazonka-sqs
     , amazonka-sns
     , http-types
     , lens
     , aws
     , monad-loops
+    , errors
 

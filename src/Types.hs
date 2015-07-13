@@ -8,6 +8,18 @@ import Data.Aeson (FromJSON (parseJSON), ToJSON (toJSON),
   Value (..), object, (.:), (.=))
 import Data.Text (Text)
 import Control.Applicative ((<$>), (<*), (<*>), (<|>))
+import Control.Monad.Trans.Reader (ReaderT)
+import qualified Network.AWS as AWS (Env)
+import Data.Map (Map)
+import Network.HTTP.Client (Manager)
+
+data Env = Env {
+    httpMgr   :: Manager
+  , awsEnv    :: AWS.Env
+  , userData  :: Map Text Text
+  }
+
+type RIO = ReaderT Env IO
 
 type Id                 = Int
 type Url                = String
@@ -17,14 +29,12 @@ type Error              = String
 data Directive = Directive {
     dDatasetId            :: Id
   , dRemoteResourceUrl    :: Url
-  , dTargetResourceBucket :: Text
   , dTargetResourcePath   :: Text
 } deriving Show
 instance FromJSON Directive where
   parseJSON (Object v) = Directive
     <$> (v .: "id")
     <*> (v .: "remote_resource_url")
-    <*> (v .: "s3_bucket")
     <*> (v .: "s3_path")
   parseJSON o = typeMismatch "Directive" o
 

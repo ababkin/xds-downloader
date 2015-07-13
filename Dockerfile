@@ -20,10 +20,7 @@ RUN cd /opt/${APP} && cabal install --only-dependencies -j8
 
 # Add and Install Application Code
 ADD . /opt/${APP}
-RUN cd /opt/${APP} && \
-    cabal install --global && \
-    rm -rf /opt/${APP}/dist && \
-    rm -rf ~/.cabal
+RUN cd /opt/${APP} && cabal install
 
 # RUN cd /opt/${APP} && cabal sandbox delete
 

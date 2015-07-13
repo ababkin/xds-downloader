@@ -45,4 +45,6 @@ executable xds-downloader
     , aws
     , monad-loops
     , errors
+    , connection
+    , http-client
 

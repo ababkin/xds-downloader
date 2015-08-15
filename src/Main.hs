@@ -15,7 +15,7 @@ import           Data.Text                    (Text)
 import qualified Data.Text                    as T
 
 {- import           Control.Monad.Trans.Resource (runResourceT) -}
-import qualified Data.Conduit.List            as CL
+import qualified Data.Conduit.List as CL
 import Aws.Ec2.InstanceMetadata (getInstanceMetadataListing)
 
 import Network.AWS (newEnv, Region(NorthVirginia), Credentials(Discover))
@@ -23,10 +23,11 @@ import qualified Network.AWS as AWS (Env)
 import Control.Monad.Loops (iterateWhile)
 import Data.Maybe (catMaybes)
 import Data.Conduit (($=), ($$), awaitForever, yield, Source, Conduit, Sink)
-import           Network.HTTP.Conduit         (withManager)
+import Network.HTTP.Conduit (withManager)
 import Data.Map (Map)
 import qualified Data.Map as M (fromList)
-import Network.HTTP.Conduit         (http, parseUrl, responseBody, newManager, ManagerSettings, mkManagerSettings)
+import Network.HTTP.Conduit (http, parseUrl, responseBody, newManager, 
+  ManagerSettings, mkManagerSettings)
 import Network.Connection (TLSSettings(TLSSettingsSimple))
 import Control.Monad.Except (runExceptT)
 

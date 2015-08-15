@@ -1,6 +1,10 @@
 ##xds-downloader
 
-Takes download directives from the download SQS, downloads file to S3 and notifies SNS
+
+### Operation
+
+
+#### Takes download directives from the download SQS
 
 {
   "id": 1,
@@ -12,6 +16,16 @@ Takes download directives from the download SQS, downloads file to S3 and notifi
 { "id": 1, "remote_resource_url": "http://samplecsvs.s3.amazonaws.com/TechCrunchcontinentalUSA.csv", "s3_path": "da2.csv"}
 
 
+#### Downloads file to S3
+
+
+#### Notifies SNS
 
 
 
+#### Building
+
+```
+# builds the project in a container, then creates a minimal image and pushes it to dockerhub
+./build-deploy-image.sh 
+```

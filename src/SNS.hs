@@ -7,10 +7,10 @@ import Control.Monad.IO.Class (liftIO)
 import Network.AWS (getEnv, Region(NorthVirginia), Credentials(Discover), send, Env, ServiceError, Response)
 import Network.AWS.Types (Rs, Sv, Er)
 import Aws.Ec2.InstanceMetadata (getInstanceMetadataListing)
-import           Network.HTTP.Conduit         (withManager)
+import Network.HTTP.Conduit (withManager)
 
 import Control.Monad.Trans.AWS (runAWST)
-import           Data.Text                    (Text)
+import Data.Text (Text)
 
 import Network.AWS.SNS.Publish (publish, Publish, pTargetArn)
 import Control.Lens ((.~), (^.), (&), (?~))

@@ -1,31 +1,52 @@
-##xds-downloader
+#xds-downloader
+
+## Operation
+
+- receives the directive from the 'Download' queue
+- Downloads file to S3 from the source url specified
+- Notifies 'Downloaded' SNS
 
 
-### Operation
+## Interface
 
+### Inputs
 
-#### Takes download directives from the download SQS
+#### Takes directives from the download queue
 
+Expected directive structure
+```
 {
-  "id": 1,
-  "remote_resource_url": "http://samplecsvs.s3.amazonaws.com/SacramentocrimeJanuary2006.csv",
-  "s3_bucket": "https://xdataset-s3bucket-csuok9tc9lko.s3-website-us-east-1.amazonaws.com/",
-  "s3_path": "net.csv"
+  "datasetId": <dataset id>,
+  "remoteUrl": <resource url to be downloaded>,
+  "s3Bucket": <AWS S3 bucket url>,
+  "s3Path": <path the downloaded resource should be placed under in the S3 bucket>
 }
+```
 
-{ "id": 1, "remote_resource_url": "http://samplecsvs.s3.amazonaws.com/TechCrunchcontinentalUSA.csv", "s3_path": "da2.csv"}
+Example:
+```
+{
+  "datasetId": 1,
+  "remoteUrl": "http://samplecsvs.s3.amazonaws.com/SacramentocrimeJanuary2006.csv",
+  "s3Bucket": "https://xdataset-s3bucket-csuok9tc9lko.s3-website-us-east-1.amazonaws.com/",
+  "s3Path": "datasets/my_dataset.csv"
+}
+```
+
+### Outputs
+
+#### Publishes modified directives onto the downloadComplete
 
 
-#### Downloads file to S3
 
 
-#### Notifies SNS
 
 
 
 #### Building
 
+xds-deploy (https://github.com/ababkin/xds-deploy) executable needs to be installed in PATH
+
 ```
-# builds the project in a container, then creates a minimal image and pushes it to dockerhub
-./build-deploy-image.sh 
+deploy # run this inside the project directory
 ```

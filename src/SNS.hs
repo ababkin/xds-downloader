@@ -1,30 +1,35 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module SNS where
 
-import Control.Monad.Trans.Reader (asks)
+import Control.Monad.Reader (asks)
 import Control.Monad.IO.Class (liftIO)
-import Network.AWS (getEnv, Region(NorthVirginia), Credentials(Discover), send, Env, ServiceError, Response)
-import Network.AWS.Types (Rs, Sv, Er)
-import Aws.Ec2.InstanceMetadata (getInstanceMetadataListing)
-import Network.HTTP.Conduit (withManager)
-
+import Data.Aeson (encode)
+import Network.AWS (send)
+import Control.Monad.Trans.Resource (runResourceT)
 import Control.Monad.Trans.AWS (runAWST)
+import qualified Data.ByteString.Lazy.Char8 as BL (unpack)
 import Data.Text (Text)
-
-import Network.AWS.SNS.Publish (publish, Publish, pTargetArn)
+import qualified Data.Text as T (pack)
+import Network.AWS.SNS.Publish (publish, pTargetARN)
 import Control.Lens ((.~), (^.), (&), (?~))
+import Control.Monad.Logger (logDebug, logInfo)
 
-import Types
-import Util
+import Types (Downloader, Env(..), Directive)
+import Util (lookupConfig)
 
 
-notify :: Text -> RIO ()
-notify s = do
-  env <- asks awsEnv  
-  notifySNSArn <- getUserDataValue "DownloadCompleteSNSTopic"
-  liftIO $ putStrLn $ "    Notifying: " ++ show s
-  resp <- liftIO $ runAWST env $ send env $ pTargetArn .~ Just notifySNSArn $ publish s
-  liftIO $ putStrLn $ "   SNS response: " ++ show resp
-  return ()
+notify :: Directive -> Downloader ()
+notify dir = do
+  env <- asks amazonkaEnv  
+  notifySNSArn <- lookupConfig "DownloadCompleteSNSTopic"
+
+  $logDebug . T.pack $ "Notifying with directive: " ++ show dir
+  resp <- liftIO $ runResourceT $ 
+            runAWST env $ 
+              send $ 
+                pTargetARN .~ Just notifySNSArn $ 
+                publish . T.pack . BL.unpack $ encode dir
+  $logDebug . T.pack $ "SNS response: " ++ show resp
 

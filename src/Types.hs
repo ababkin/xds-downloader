@@ -1,55 +1,46 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 module Types where
 
-import Data.Aeson (Value (..), eitherDecode, encode, decode)
-import Data.Aeson.Types (typeMismatch)
-import Data.Aeson (FromJSON (parseJSON), ToJSON (toJSON),
-  Value (..), object, (.:), (.=))
+import Control.Applicative (Applicative)
+import Control.Monad.Reader.Class (MonadReader)
+import Control.Monad.IO.Class (MonadIO)
+import Data.Aeson (FromJSON, ToJSON, Value)
 import Data.Text (Text)
-import Control.Applicative ((<$>), (<*), (<*>), (<|>))
 import Control.Monad.Trans.Reader (ReaderT)
-import qualified Network.AWS as AWS (Env)
 import Data.Map (Map)
 import Network.HTTP.Client (Manager)
+import qualified Network.AWS as AWS (Env)
+import Aws.Aws (Configuration)
+import GHC.Generics (Generic)
+import Control.Monad.Catch (MonadThrow)
+import Control.Monad.Logger (MonadLogger, LoggingT)
 
 data Env = Env {
-    httpMgr   :: Manager
-  , awsEnv    :: AWS.Env
-  , userData  :: Map Text Text
+    awsConfig   :: Configuration
+  , amazonkaEnv :: AWS.Env
+  , httpMgr     :: Manager
+  , config      :: Map Text Text
   }
 
-type RIO = ReaderT Env IO
+newtype Downloader a = 
+  Downloader {unDownloader :: ReaderT Env (LoggingT IO) a}
+  deriving(Functor, Applicative, Monad, 
+    MonadIO, MonadThrow, MonadReader Env, MonadLogger)
 
-type Id                 = Int
-type Url                = String
-type OriginalDirective  = String
-type Error              = String
+type Id   = Int
+type URL  = Text
+type Path = Text
 
 data Directive = Directive {
-    dDatasetId            :: Id
-  , dRemoteResourceUrl    :: Url
-  , dTargetResourcePath   :: Text
-} deriving Show
-instance FromJSON Directive where
-  parseJSON (Object v) = Directive
-    <$> (v .: "id")
-    <*> (v .: "remote_resource_url")
-    <*> (v .: "s3_path")
-  parseJSON o = typeMismatch "Directive" o
+    datasetId :: Id
+  , remoteUrl :: URL
+  , s3Bucket  :: URL
+  , s3Path    :: Path
+  , logs      :: Maybe [Value]
+} deriving (Show, Generic)
+instance FromJSON Directive
+instance ToJSON Directive
 
-
-data Result = Success Id | Failure OriginalDirective Error deriving Show
-instance ToJSON Result where
-  toJSON (Success datasetId) =
-    object  [
-              "status"      .= ("success" :: Text)
-            , "id"          .= datasetId
-            , "op"          .= ("download" :: Text)
-            ]
-  toJSON (Failure original err)    =
-    object  [
-              "status"      .= ("failure" :: Text)
-            , "original"    .= original
-            , "error"       .= err
-            ]

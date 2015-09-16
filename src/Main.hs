@@ -35,7 +35,7 @@ import Control.Monad.Logger (runStdoutLoggingT, logDebug, logInfo)
 
 import Types (Downloader(unDownloader), Env(..), Directive)
 import SQS (getDirectives)
-import SNS (notify)
+import Notify (notify)
 import Download (download)
 
 

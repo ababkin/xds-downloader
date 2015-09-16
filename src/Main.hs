@@ -34,7 +34,7 @@ import Aws.Aws (Configuration(credentials))
 import Control.Monad.Logger (runStdoutLoggingT, logDebug, logInfo)
 
 import Types (Downloader(unDownloader), Env(..), Directive)
-import SQS (getDirectives)
+import Queue (getDirectives)
 import Notify (notify)
 import Download (download)
 

@@ -9,7 +9,7 @@ import Data.Text (Text)
 import Control.Monad.Reader (asks)
 import Control.Monad.Reader.Class (MonadReader)
 
-import Types (Downloader(..), Env(..))
+import Types (Env(config))
 
 
 lookupConfig 

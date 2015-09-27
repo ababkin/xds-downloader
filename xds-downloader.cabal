@@ -12,7 +12,8 @@ executable xds-downloader
   main-is:        Main.hs
   ghc-options:    
     -static 
-    -Wall 
+    -Wall
+    -Werror
     -threaded 
     -O2
     -rtsopts

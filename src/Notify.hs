@@ -2,14 +2,8 @@
 
 module Notify where
 
-import qualified Data.ByteString.Lazy.Char8 as BL (unpack)
 import Control.Monad.Reader (asks)
-import Control.Monad.IO.Class (liftIO)
-import Control.Monad.Logger (logDebug, logInfo)
-import Control.Monad.Trans.Resource (runResourceT)
-import Control.Monad.Trans.AWS (runAWST)
-import Data.Text (Text)
-import qualified Data.Text as T (pack)
+{- import Control.Monad.Logger (logDebug, logInfo) -}
 
 import Types (Downloader, Env(..), Directive)
 import Util (lookupConfig)

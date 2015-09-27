@@ -7,11 +7,11 @@ import Control.Monad.Reader (asks)
 
 import Types (Downloader, Env(..), Directive)
 import Util (lookupConfig)
-import Xds.Amazonka.SNS (publishJson)
+import Xds.Aws.SNS (publishJson)
 
 
 notify :: Directive -> Downloader ()
 notify dir = do
-  env <- asks amazonkaEnv  
+  cfg <- asks awsConfig  
   notifySNSArn <- lookupConfig "DownloadCompleteSNSTopic"
-  publishJson env notifySNSArn dir
+  publishJson cfg notifySNSArn dir

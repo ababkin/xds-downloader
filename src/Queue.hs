@@ -4,13 +4,16 @@ module Queue where
 
 import Control.Monad.Reader (asks)
 
+import Data.Text (Text)
 import Types (Downloader, Env(awsConfig), Directive)
 import Util (lookupConfig)
 import Xds.Aws.SQS (popJson)
 
+awsUserId :: Text
+awsUserId = "445506728970"
 
 getDirectives :: Downloader [Directive]
 getDirectives = do
-  cfg <- asks awsConfig
+  cfg   <- asks awsConfig
   qName <- lookupConfig "DownloadQueueName" 
-  popJson cfg qName
+  popJson cfg qName awsUserId

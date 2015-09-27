@@ -20,8 +20,7 @@ import Network.Connection (TLSSettings(TLSSettingsSimple))
 import System.Environment (getEnv)
 import Control.Monad.Logger (runStdoutLoggingT, logDebug)
 
-import Xds.Amazonka.Config as Xds.Amazonka (config)
-import Xds.Aws.Config as Xds.Aws (config)
+import Xds.Aws.Config (config)
 
 import Types (Downloader(unDownloader), Env(..), Directive)
 import Queue (getDirectives)
@@ -35,18 +34,17 @@ envVars = ["DownloadQueueName", "DownloadCompleteSNSTopic"]
 main :: IO ()
 main = do
   
-      mgr       <- newManager managerSettings
-      amazonka  <- Xds.Amazonka.config mgr
-      aws       <- Xds.Aws.config
+      mgr     <- newManager managerSettings
+      awsCfg  <- config mgr
       
-      cfg <- M.fromList <$> mapM (\ev -> 
+      lenv <- M.fromList <$> mapM (\ev -> 
           (T.pack ev,) . T.pack <$> getEnv ev
         ) envVars
 
-      let env = Env aws amazonka mgr cfg 
+      let env = Env awsCfg mgr lenv
 
       runStdoutLoggingT $ do
-        $logDebug . T.pack $ "Environment Variables: " ++ show cfg
+        $logDebug . T.pack $ "Environment Variables: " ++ show lenv 
         runReaderT (unDownloader runDaemon) env
   
   where

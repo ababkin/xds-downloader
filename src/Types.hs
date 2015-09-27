@@ -12,17 +12,16 @@ import Data.Text (Text)
 import Control.Monad.Trans.Reader (ReaderT)
 import Data.Map (Map)
 import Network.HTTP.Client (Manager)
-import qualified Network.AWS as AWS (Env)
-import Aws.Aws (Configuration)
 import GHC.Generics (Generic)
 import Control.Monad.Catch (MonadThrow)
 import Control.Monad.Logger (MonadLogger, LoggingT)
 
+import Xds.Aws.Config (Config)
+
 data Env = Env {
-    awsConfig   :: Configuration
-  , amazonkaEnv :: AWS.Env
-  , httpMgr     :: Manager
-  , config      :: Map Text Text
+    awsConfig :: Config
+  , httpMgr   :: Manager
+  , localEnv  :: Map Text Text
   }
 
 newtype Downloader a = 

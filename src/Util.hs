@@ -9,7 +9,7 @@ import Data.Text (Text)
 import Control.Monad.Reader (asks)
 import Control.Monad.Reader.Class (MonadReader)
 
-import Types (Env(config))
+import Types (Env(localEnv))
 
 
 lookupConfig 
@@ -17,4 +17,4 @@ lookupConfig
   => Text
   -> m Text
 lookupConfig k = 
-  fromJust . M.lookup k <$> asks config
+  fromJust . M.lookup k <$> asks localEnv

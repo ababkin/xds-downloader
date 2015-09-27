@@ -23,5 +23,6 @@ import Xds.Aws.SQS (popJson)
 
 getDirectives :: Downloader [Directive]
 getDirectives = do
+  cfg <- asks awsConfig
   qName <- lookupConfig "DownloadQueueName" 
-  popJson qName
+  popJson cfg qName

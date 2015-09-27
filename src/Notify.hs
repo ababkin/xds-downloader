@@ -18,6 +18,6 @@ import Xds.Amazonka.SNS (publishJson)
 
 notify :: Directive -> Downloader ()
 notify dir = do
+  env <- asks amazonkaEnv  
   notifySNSArn <- lookupConfig "DownloadCompleteSNSTopic"
-
-  publishJson notifySNSArn dir
+  publishJson env notifySNSArn dir

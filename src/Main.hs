@@ -33,6 +33,9 @@ import Control.Monad.Trans.AWS (envLogger, envManager)
 import Aws.Aws (Configuration(credentials))
 import Control.Monad.Logger (runStdoutLoggingT, logDebug, logInfo)
 
+import Xds.Amazonka.Config as Xds.Amazonka (config)
+import Xds.Aws.Config as Xds.Aws (config)
+
 import Types (Downloader(unDownloader), Env(..), Directive)
 import Queue (getDirectives)
 import Notify (notify)
@@ -44,25 +47,15 @@ envVars = ["DownloadQueueName", "DownloadCompleteSNSTopic"]
 main :: IO ()
 main = do
   
-  maybeCreds <- Aws.loadCredentialsFromEnv
-  case maybeCreds of
-    Nothing ->
-      error "Please set the environment variables AWS_ACCESS_KEY_ID and AWS_ACCESS_KEY_SECRET"
-
-    Just creds -> do
-      lgr <- AWS.newLogger AWS.Debug stdout  
-      httpMgr <- newManager managerSettings
-      amazonkaEnv <- newEnv NorthVirginia Discover <&> envLogger .~ lgr <&> envManager .~ httpMgr
+      mgr       <- newManager managerSettings
+      amazonka  <- Xds.Amazonka.config mgr
+      aws       <- Xds.Aws.config
       
       config <- M.fromList <$> mapM (\ev -> 
           (T.pack ev,) . T.pack <$> getEnv ev
         ) envVars
 
-      awsConfig <- Aws.baseConfiguration
-      {- awsConfig <- Aws.dbgConfiguration -}
-
-      let env = Env awsConfig{credentials = creds} amazonkaEnv httpMgr config
-
+      let env = Env aws amazonka mgr config
 
       runStdoutLoggingT $ do
         $logDebug . T.pack $ "Environment Variables: " ++ show config

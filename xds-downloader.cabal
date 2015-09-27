@@ -44,6 +44,7 @@ executable xds-downloader
     , http-client
     , exceptions
     , monad-logger
+    , xds-aws
 
 
 

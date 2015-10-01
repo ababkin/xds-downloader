@@ -9,7 +9,7 @@ cabal-version:       >=1.8
 
 executable xds-downloader
   hs-source-dirs: src
-  main-is:        Main.hs
+  main-is:        xds-downloader.hs
   ghc-options:    
     -static 
     -Wall
@@ -41,7 +41,9 @@ executable xds-downloader
     , http-client
     , exceptions
     , monad-logger
-    , xds-aws >= 0.2.0.0 && < 0.3
+    , xds-aws >= 0.2 && < 0.3
+    , xds-types >= 0.1 && < 0.2
+    
 
 
 

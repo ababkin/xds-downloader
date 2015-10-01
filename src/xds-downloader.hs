@@ -3,8 +3,6 @@
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Main where
-
 import Control.Monad (forever)
 import Control.Applicative ((<$>))
 import Control.Monad.Trans.Reader (runReaderT)
@@ -21,11 +19,12 @@ import System.Environment (getEnv)
 import Control.Monad.Logger (runStdoutLoggingT, logDebug)
 
 import Xds.Aws.Config (config)
+import Xds.Directive.Types (Directive)
 
-import Types (Downloader(unDownloader), Env(..), Directive)
-import Queue (getDirectives)
-import Notify (notify)
-import Download (download)
+import Xds.Downloader.Types (Downloader(unDownloader), Env(..))
+import Xds.Downloader.Queue (getDirectives)
+import Xds.Downloader.Notify (notify)
+import Xds.Downloader.Download (download)
 
 
 envVars :: [String]

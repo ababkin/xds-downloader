@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 
-module Util (lookupConfig) where
+module Xds.Downloader.Util (lookupConfig) where
 
 import Control.Applicative ((<$>))
 import Data.Maybe (fromJust)
@@ -9,7 +9,7 @@ import Data.Text (Text)
 import Control.Monad.Reader (asks)
 import Control.Monad.Reader.Class (MonadReader)
 
-import Types (Env(localEnv))
+import Xds.Downloader.Types (Env(localEnv))
 
 
 lookupConfig 

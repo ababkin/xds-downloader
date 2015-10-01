@@ -1,13 +1,15 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Notify where
+module Xds.Downloader.Notify where
 
 import Control.Monad.Reader (asks)
 {- import Control.Monad.Logger (logDebug, logInfo) -}
 
-import Types (Downloader, Env(..), Directive)
-import Util (lookupConfig)
 import Xds.Aws.SNS (publishJson)
+import Xds.Directive.Types (Directive)
+
+import Xds.Downloader.Types (Downloader, Env(..))
+import Xds.Downloader.Util (lookupConfig)
 
 
 notify :: Directive -> Downloader ()

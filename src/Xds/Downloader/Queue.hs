@@ -1,13 +1,16 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Queue where
+module Xds.Downloader.Queue where
 
 import Control.Monad.Reader (asks)
 
 import Data.Text (Text)
-import Types (Downloader, Env(awsConfig), Directive)
-import Util (lookupConfig)
 import Xds.Aws.SQS (popJson)
+import Xds.Directive.Types (Directive)
+
+import Xds.Downloader.Types (Downloader, Env(awsConfig))
+import Xds.Downloader.Util (lookupConfig)
+
 
 awsUserId :: Text
 awsUserId = "445506728970"
